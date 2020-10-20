@@ -3,13 +3,13 @@
         <b-form>
             <input id="article-id" type="hidden" v-model="article.id" />
             <b-form-group label="Nome:" label-for="article-name">
-                <b-form-input id="article-name" type="text"
+                <b-form-input id="article-name" type="text" 
                     v-model="article.name" required
                     :readonly="mode === 'remove'"
                     placeholder="Informe o Nome do Artigo..." />
             </b-form-group>
             <b-form-group label="Descrição:" label-for="article-description">
-                <b-form-input id="article-description" type="text"
+                <b-form-input id="article-description" type="text" 
                     v-model="article.description" required
                     :readonly="mode === 'remove'"
                     placeholder="Informe a Descrição do Artigo..." />
@@ -21,12 +21,12 @@
                     :readonly="mode === 'remove'"
                     placeholder="Informe a URL da Imagem..." />
             </b-form-group>
-            <b-form-group v-if="mode === 'save'" 
+            <b-form-group v-if="mode === 'save'"
                 label="Categoria:" label-for="article-categoryId">
                 <b-form-select id="article-categoryId"
                     :options="categories" v-model="article.categoryId" />
             </b-form-group>
-            <b-form-group v-if="mode === 'save'" 
+            <b-form-group v-if="mode === 'save'"
                 label="Autor:" label-for="article-userId">
                 <b-form-select id="article-userId"
                     :options="users" v-model="article.userId" />
@@ -34,13 +34,14 @@
             <b-form-group v-if="mode === 'save'"
                 label="Conteúdo" label-for="article-content">
                 <VueEditor v-model="article.content"
+                    :disabled="mode === 'remove'"
                     placeholder="Informe o Conteúdo do Artigo..." />
             </b-form-group>
-            <b-button variant="primary" v-if="mode === 'save'"
-                @click="save">Salvar</b-button>
-            <b-button variant="danger" v-if="mode === 'remove'"
-                @click="remove">Excluir</b-button>
-            <b-button class="ml-2" @click="reset">Cancelar</b-button>
+                    <b-button variant="primary" v-if="mode === 'save'"
+                        @click="save">Salvar</b-button>
+                    <b-button variant="danger" v-if="mode === 'remove'"
+                        @click="remove">Excluir</b-button>
+                    <b-button class="ml-2" @click="reset">Cancelar</b-button>
         </b-form>
         <hr>
         <b-table hover striped :items="articles" :fields="fields">
@@ -58,6 +59,7 @@
 </template>
 
 <script>
+
 import { VueEditor } from "vue2-editor"
 import { baseApiUrl, showError } from '@/global'
 import axios from 'axios'
@@ -87,6 +89,7 @@ export default {
         loadArticles() {
             const url = `${baseApiUrl}/articles?page=${this.page}`
             axios.get(url).then(res => {
+                // this.articles = res.data
                 this.articles = res.data.data
                 this.count = res.data.count
                 this.limit = res.data.limit
@@ -104,8 +107,8 @@ export default {
                 .then(() => {
                     this.$toasted.global.defaultSuccess()
                     this.reset()
-                })
-                .catch(showError)
+            })
+            .catch(showError)
         },
         remove() {
             const id = this.article.id
